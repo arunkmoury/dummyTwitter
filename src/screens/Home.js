@@ -15,30 +15,31 @@ export const Home = () => {
     );
 }
 
-const TabNav = TabNavigator(
-    {
-        Home: {
-            screen: Home,
-            navigationOptions: {
-                tabBarIcon: <Icon name={"home"} size={20}/>
-            }
-        },
-        Search: {
-            screen: Search,
-        },
-        Notifications: {
-            screen: Notifications,
-        },
-        Message: {
-            screen: Message,
-        },
-    },
-    {
-        tabBarOptions: {
-            activeTintColor: 'tomato',
-            inactiveTintColor: 'gray',
+const routeConfigs = {
+    Home: {
+        screen: Home,
+        navigationOptions: {
+            tabBarIcon: <Icon name={"home"} size={20}/>
         }
+    },
+    Search: {
+        screen: Search,
+    },
+    Notifications: {
+        screen: Notifications,
+    },
+    Message: {
+        screen: Message,
+    },
+}
+
+const tabNavigatorConfig = {
+    tabBarOptions: {
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray',
     }
-);
+}
+
+const TabNav = TabNavigator(routeConfigs, tabNavigatorConfig);
 
 export default TabNav;
