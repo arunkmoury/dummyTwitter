@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, View, StyleSheet} from 'react-native';
 
 class drawerContentComponents extends Component{
     navigateToScreen = ( route ) => () => {
@@ -11,7 +11,7 @@ class drawerContentComponents extends Component{
     }
     render(){
         return(
-            <View>
+            <View style={styles.container}>
                 <ScrollView>
                     <View>
                         <Text onPress={this.navigateToScreen('Profile')}>Profile</Text>
@@ -27,5 +27,11 @@ class drawerContentComponents extends Component{
         );
     }
 }
+
+const styles= StyleSheet.create({
+    container: {
+        alignItems: 'center'
+    }
+});
 
 export default drawerContentComponents;
