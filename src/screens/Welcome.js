@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { Grid, Row, Container } from 'native-base';
 import { StackNavigator } from 'react-navigation';
-import TabNav from './Home';
+import DrawerNav from '../screens/Profile';
 
 export class Welcome extends Component {
     render(){
@@ -25,9 +25,12 @@ const StackNav = StackNavigator({
     Welcome: {
         screen: Welcome,
     },
-    TabNav: {
-        screen: TabNav,
-    },
+    DrawerNav: {
+        screen: DrawerNav,
+    }
+},
+{
+    headerMode: 'none'
 });
 
 export default StackNav;
