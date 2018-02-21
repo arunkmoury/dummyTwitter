@@ -5,6 +5,7 @@ import Search from './Search';
 import Message  from './Message';
 import Notifications from './Notifications';
 import Icon from "react-native-vector-icons/FontAwesome";
+import tabBarComponent from '../components/navs/tabComponent';
 
 export const Home = () => {
     console.log("Home");
@@ -37,7 +38,14 @@ const tabNavigatorConfig = {
     tabBarOptions: {
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
-    }
+        style: {
+            backgroundColor: 'blue',
+          },
+    },
+    tabBarComponent: tabBarComponent,
+    tabBarPosition: 'bottom',
+    lazy: true,
+
 }
 
 const TabNav = TabNavigator(routeConfigs, tabNavigatorConfig);
