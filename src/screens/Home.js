@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Search from './Search';
 import Message  from './Message';
@@ -8,20 +8,16 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import tabBarComponent from '../components/navs/tabComponent';
 
 export const Home = () => {
-    console.log("Home");
     return (
-        <View>
-            <Text>Home</Text>
-        </View>
+        <View style={{flexDirection: 'row'}}>
+                        <Text>Home</Text>
+            </View>
     );
 }
 
 const routeConfigs = {
     Home: {
         screen: Home,
-        navigationOptions: {
-            tabBarIcon: <Icon name={"home"} size={20}/>
-        }
     },
     Search: {
         screen: Search,
@@ -35,16 +31,20 @@ const routeConfigs = {
 }
 
 const tabNavigatorConfig = {
+    tabBarComponent: tabBarComponent,
+    tabBarPosition: 'top',
+    lazy: true,
     tabBarOptions: {
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
         style: {
             backgroundColor: 'blue',
           },
+        activeBackgroundColor: 'green',
     },
-    tabBarComponent: tabBarComponent,
-    tabBarPosition: 'bottom',
-    lazy: true,
+    navigationOptions: {
+        title: 'Tab',
+    }
 
 }
 
