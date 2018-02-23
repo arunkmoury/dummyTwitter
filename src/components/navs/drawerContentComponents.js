@@ -22,6 +22,9 @@ class drawerContentComponents extends Component{
                             </View>
                         </ImageBackground>
                     </View>
+                    <View style={{flexDirection: 'row'}}>
+                        
+                    </View>
                     <View style={styles.screenContainer}>
                         <View style={styles.screenStyle}>
                             <Icon name='user' size={25} style={styles.iconStyle}/>

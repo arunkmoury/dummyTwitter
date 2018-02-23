@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, Modal } from 'react-native';
+import firebase from 'firebase';
 import { StackNavigator } from 'react-navigation';
 import DrawerNav from '../screens/Profile';
 import Login from '../screens/Login';
@@ -7,12 +8,28 @@ import Login from '../screens/Login';
 export class Welcome extends Component {
     constructor(props) {
         super(props);
-        this.state = {modalVisible: false};
+        this.state = {
+            modalVisible: false,
+        };
     }
+
+    componentWillMount(){
+        firebase.initializeApp({
+            apiKey: 'AIzaSyCSjp6i9w8uaeWQtqB9RD-WzcX4dd-K1v0',
+            authDomain: 'twitter-6edbb.firebaseapp.com',
+            databaseURL: 'https://twitter-6edbb.firebaseio.com',
+            projectId: 'twitter-6edbb',
+            storageBucket: 'twitter-6edbb.appspot.com',
+            messagingSenderId: '471065315757'
+        });
+    }
+
     render(){
         return (
             <View style={styles.container}>
-                <Login type="Login" buttonPressed={() => this.props.navigation.navigate('Home')}/>
+                <View style={{flex: 3}}>
+                    <Login userAction="Login" buttonPress={() => this.props.navigation.navigate('Home')}/>
+                </View>
                 <View style={styles.signupStyle}>
                     <TouchableOpacity 
                         style={styles.button} 
@@ -86,5 +103,5 @@ const styles = StyleSheet.create({
         fontWeight:'500',
         color:'#ffffff',
         textAlign:'center'
-    }
+    },
 });
