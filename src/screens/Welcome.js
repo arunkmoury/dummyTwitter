@@ -50,7 +50,7 @@ export class Welcome extends Component {
                         alignContent: 'center',
                         height: 500
                     }}>
-                        <Login type="Sign Up" />
+                        <Login type="Sign Up" buttonPress={() => this.props.navigation.navigate('Home')} />
                     
                         <Button
                             onPress={()=>this.setState({modalVisible: false})}

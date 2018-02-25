@@ -5,10 +5,13 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
+    Alert,
+    Keyboard
     } from 'react-native';
 import firebase from 'firebase';
 import Input from '../components/Input';
 import Spinner from '../components/Spinner';
+import AlertMsg from '../components/AlertMsg';
 
 class Login extends Component {
     constructor(props){
@@ -22,18 +25,46 @@ class Login extends Component {
         };
         this.onLoginSuccess = this.onLoginSuccess.bind(this);
     }
+
     onLoginSuccess(){
         this.setState(
             {
-                email: '',
-                password: '',
                 errorMessage: '',
                 isloading: false,
             },
             () => { console.log(this.state.isloading) }
         );
-        this.setState({isloading: false});
         this.props.buttonPress();
+    }
+
+    onCreateAccountSuccess(){
+        this.setState({
+            isloading: false,
+            errorMessage: '',
+        },() => console.log(this.state.isloading)
+        )
+        this.props.buttonPress();
+    }
+
+    alertMsg = (ErrorMsg) => {
+        Keyboard.dismiss();
+        Alert.alert(
+            'Authentication Failed',
+            this.state.errorMessage,
+            [
+                { 
+                    text: 'OK', 
+                    onPress: () => {
+                        this.setState(
+                            {
+                                isloading: false,
+                            },
+                            () => { console.log(this.state.isloading) }
+                        );
+                    }
+                },
+            ],
+          )
     }
 
     renderButton(){
@@ -48,34 +79,78 @@ class Login extends Component {
         }
     }
 
-    buttonPressed(){
+    login(){
         const { name, email, password, isloading } = this.state;
-
-        this.setState({errorMessage: '', isloading: true});
-
-        if(this.props.userAction==='Login'){
-            firebase.auth().signInWithEmailAndPassword(email, password)
+        firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(()=>{
                     console.log("sign in");
                     this.onLoginSuccess();
                 })
                 .catch((error) => {
                     let errorCode = error.code;
+                    let errorMessage = error.message;
                     if(errorCode==='auth/user-not-found'){
-                        console.log(this.state.errorMessage+' user not found');
-                        this.setState({errorMessage: 'authentication failed'});
+                        this.setState({errorMessage: 'Email not found, Check your email'});
+                        // <AlertMsg ErrorMsg={this.state.errorMessage} />
+                        this.alertMsg(errorMessage);
                     }else if(errorCode==='auth/wrong-password'){
-                        console.log(this.state.errorMessage+' wrong password');
-                        this.setState({errorMessage: 'authentication failed'});
+                        this.setState({errorMessage: 'Wrong password, check your password'});
+                        //<AlertMsg ErrorMsg={this.state.errorMessage} />
+                        this.alertMsg(errorMessage);
                     }else{
-                        console.log(this.state.errorMessage);
-                        this.setState({errorMessage: 'authentication failed'});
+                        this.setState({errorMessage: 'Something went wrong'});
+                        console.log(errorCode);
+                        //<AlertMsg ErrorMsg={this.state.errorMessage} />
+                        this.alertMsg(errorMessage);
                     }
                 });
+    }
+
+    signup(){
+        const { name, email, password, isloading } = this.state;
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(()=> {
+                console.log("Account Created")
+                this.onCreateAccountSuccess();
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                let errorMessage = error.message;
+                switch(errorCode){
+                    case 'auth/email-already-in-use':
+                        console.log(errorMessage);
+                        this.setState({errorMessage: errorMessage});
+                        this.alertMsg(errorMessage);
+                        break;
+                    case 'auth/invalid-email':
+                        console.log(errorMessage);
+                        this.setState({errorMessage: errorMessage});
+                        this.alertMsg(errorMessage);
+                        break;
+                    case 'auth/weak-password':
+                        console.log(errorMessage);
+                        this.setState({errorMessage: errorMessage});
+                        this.alertMsg(errorMessage);
+                        break;
+                    default:
+                        console.log(errorMessage);
+                        this.setState({errorMessage: errorMessage});
+                        this.alertMsg(errorMessage);
+                }
+            })
+    }
+
+    buttonPressed(){
+        //const { name, email, password, isloading } = this.state;
+
+        this.setState({errorMessage: '', isloading: true});
+
+        if(this.props.userAction==='Login'){
+            this.login();
         }
         //User Sign Up
         else{
-            firebase.auth().createUserWithEmailAndPassword(email, password);
+            this.signup();
         }
         
     }
