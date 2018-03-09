@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import {Container, Header, Button, Left, Content} from 'native-base';
-import { DrawerNavigator } from 'react-navigation';
-import Lists from './Lists';
-import Moments from './Moments';
-import TabNav from './Home';
-import drawerContentComponents from '../components/navs/drawerContentComponents';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export class Profile extends Component {
+
+export default class Profile extends Component {
     render(){
         return (
             <Container>
@@ -27,22 +23,3 @@ export class Profile extends Component {
         );
     }
 }
-
-const DrawerNav = DrawerNavigator(
-    {
-        TabNav: { 
-            screen: TabNav,
-        },
-        Profile: { 
-            screen: Profile ,
-        },
-        Lists: { screen: Lists},
-        Moments: { screen: Moments },
-    },
-    {
-        drawerBackgroundColor: '#98eef3',
-        contentComponent: drawerContentComponents,
-    } 
-);
-
-export default DrawerNav;

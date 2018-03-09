@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import Header from '../components/Header';
 
-const Notifications = () => {
-    return (
-        <View>
-            <Text>Notifications</Text>
-        </View>
-    );
+class Notifications extends Component {
+    static navigationOptions =  ({navigation}) =>( {
+        title: 'Notice',
+        header: <Header headerTitle={navigation.state.routeName}/>,
+    });
+    render() {
+        return (
+            <View>
+                <Text>Notifications</Text>
+            </View>
+        );
+    }
 }
 
 export default Notifications;

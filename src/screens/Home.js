@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Button, Alert } from 'react-native';
-import { TabNavigator } from 'react-navigation';
-import Search from './Search';
-import Message  from './Message';
-import Notifications from './Notifications';
-// import Icon from "react-native-vector-icons/FontAwesome";
-import tabBarComponent from '../components/navs/tabComponent';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { View, Text, ScrollView, Button, Alert, Animated } from 'react-native';
+import Header from '../components/Header';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 export class Home extends Component {
-    static navigationOptions = {
-        title : 'Home',
-        tabBarIcon: () => (<Icon name='home' size={30} onPress={this.navigateToScreen('Home')} />),
+
+    constructor(props){
+        super(props);
+        // this.state = {
+        //     scrollY: new Animated.Value(0)
+        // }
     }
+    
+    static navigationOptions = ({navigation}) =>( {
+        title: 'Home',
+        header: <Header headerTitle={navigation.state.routeName}/>,
+        
+        // headerStyle: {
+        //     backgroundColor: 'lightskyblue',
+        // },
+        headerTintColor: '#fff',
+      });
 
     alertButton(){
         return(
@@ -26,44 +33,25 @@ export class Home extends Component {
     }
 
     render(){
+        // const headerHeight = this.state.scrollY.interpolate({
+        //     inputRange: [0, 120],
+        //     outputRange: [120, 0],
+        // })
+
         return (
-        <View style={{flexDirection: 'row'}}>
-                        <Text>Home</Text>
-                        <Button onPress={this.alertButton.bind(this)} title="Alert" />
-            </View>
+            <ScrollView 
+                style={{height: 1000}}
+                // onScroll={Animated.event(
+                //     [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
+                //)}
+            >
+                <View style={{height: 1000}}>
+                <Text>Home</Text>
+                <Button onPress={this.alertButton.bind(this)} title="Alert" />
+                </View>
+            </ScrollView>
         );
     }
 }
 
-const routeConfigs = {
-    Home: {
-        screen: Home,
-    },
-    Search: {
-        screen: Search,
-    },
-    Notifications: {
-        screen: Notifications,
-    },
-    Message: {
-        screen: Message,
-    },
-}
-
-const tabNavigatorConfig = {
-    // tabBarComponent: tabBarComponent,
-    tabBarPosition: 'top',
-    lazy: true,
-    tabBarOptions: {
-        activeTintColor: 'yellow',
-        inactiveTintColor: 'gray',
-        style: {
-            backgroundColor: '#8e24aa',
-          },
-        activeBackgroundColor: 'green',
-    },
-}
-
-const TabNav = TabNavigator(routeConfigs, tabNavigatorConfig);
-
-export default TabNav;
+export default Home;

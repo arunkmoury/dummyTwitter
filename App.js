@@ -11,15 +11,12 @@ import {
   Text,
   View
 } from 'react-native';
-import { Welcome } from './src/screens/Welcome';
-import TabNav, { Home } from './src/screens/Home';
-import DrawerNav from './src/screens/Profile';
-import StackNav from './src/screens/Welcome';
+import { DrawerNav } from './src/components/navs/navigators';
 
 export default class App extends Component<> {
   render() {
     return (
-        <StackNav />
+        <DrawerNav />
     );
   }
 }

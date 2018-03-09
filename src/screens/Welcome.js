@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, Modal } from 'react-native';
 import firebase from 'firebase';
-import { StackNavigator } from 'react-navigation';
-import DrawerNav from '../screens/Profile';
 import Login from '../screens/Login';
 
-export class Welcome extends Component {
+export default class Welcome extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modalVisible: false,
         };
     }
+
+    static navigationOptions = () => ({
+        drawerLockMode: 'locked-closed'
+      })
 
     componentWillMount(){
         firebase.initializeApp({
@@ -25,10 +27,11 @@ export class Welcome extends Component {
     }
 
     render(){
+        console.log(this.props);
         return (
             <View style={styles.container}>
                 <View style={{flex: 3}}>
-                    <Login userAction="Login" buttonPress={() => this.props.navigation.navigate('Home')}/>
+                    <Login userAction="Login" buttonPress={() => this.props.navigation.navigate('StackNav')}/>
                 </View>
                 <View style={styles.signupStyle}>
                     <TouchableOpacity 
@@ -50,7 +53,7 @@ export class Welcome extends Component {
                         alignContent: 'center',
                         height: 500
                     }}>
-                        <Login type="Sign Up" buttonPress={() => this.props.navigation.navigate('Home')} />
+                        <Login userAction="Sign Up" buttonPress={() => this.props.navigation.navigate('Home')} />
                     
                         <Button
                             onPress={()=>this.setState({modalVisible: false})}
@@ -62,20 +65,6 @@ export class Welcome extends Component {
         );
     }
 }
-
-const StackNav = StackNavigator({
-    Welcome: {
-        screen: Welcome,
-    },
-    DrawerNav: {
-        screen: DrawerNav,
-    }
-},
-{
-    headerMode: 'none'
-});
-
-export default StackNav;
 
 const styles = StyleSheet.create({
     container : {
