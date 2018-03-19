@@ -1,47 +1,105 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, Modal, BackHandler, Alert, Image } from 'react-native';
+import { connect } from 'react-redux';
 import firebase from 'firebase';
-import Login from '../screens/Login';
+import {
+    loginUser
+} from '../actions';
+import Input from '../components/Input';
+import Spinner from '../components/Spinner';
 
-export default class Welcome extends Component {
-    constructor(props) {
+class Welcome extends Component {
+    constructor(props){
         super(props);
         this.state = {
             modalVisible: false,
-        };
+            email: '',
+            password: '',
+        }
+        this.renderHome = this.renderHome.bind(this);
     }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+      }
+
+    handleBackButton = () => {
+        Alert.alert(
+            'Exit App',
+            'Exiting the application?', 
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, 
+                {text: 'OK', onPress: () => BackHandler.exitApp()}
+            ], 
+            { cancelable: false }
+        )
+        return true;
+    } 
 
     static navigationOptions = () => ({
         drawerLockMode: 'locked-closed'
-      })
+    })
 
-    componentWillMount(){
-        firebase.initializeApp({
-            apiKey: 'AIzaSyCSjp6i9w8uaeWQtqB9RD-WzcX4dd-K1v0',
-            authDomain: 'twitter-6edbb.firebaseapp.com',
-            databaseURL: 'https://twitter-6edbb.firebaseio.com',
-            projectId: 'twitter-6edbb',
-            storageBucket: 'twitter-6edbb.appspot.com',
-            messagingSenderId: '471065315757'
-        });
+    loginButtonPress() {
+        this.props.loginUser(this.state.email, this.state.password);
     }
 
-    render(){
-        console.log(this.props);
+    renderHome(){
+        this.props.navigation.navigate('StackNav');
+    }
+
+    renderLoginButton(loading){
+        if(loading){
+            return <Spinner />;
+        }else{
+            return (
+                <View style={{alignItems: 'center'}}>
+                    <TouchableOpacity style={styles.button} onPress={this.loginButtonPress.bind(this)} >
+                        <Text style={styles.buttonText}>Login</Text>
+                    </TouchableOpacity>
+                    <Text style={{lineHeight: 50}}>OR</Text>
+                    <TouchableOpacity style={styles.button} onPress={this.loginButtonPress.bind(this)} >
+                        <Text style={styles.buttonText}>Sign Up</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+    }
+
+    render() {
+        console.log(this.props.user);
         return (
             <View style={styles.container}>
-                <View style={{flex: 3}}>
-                    <Login userAction="Login" buttonPress={() => this.props.navigation.navigate('StackNav')}/>
-                </View>
-                <View style={styles.signupStyle}>
-                    <TouchableOpacity 
-                        style={styles.button} 
-                        onPress={() => {this.setState({modalVisible: true})}} 
-                    >
+                {(this.props.user)?this.renderHome():null}
+                <View style={{flex: 3, justifyContent: 'center'}}>
+                    <View style={{width:180, height: 150, overflow: 'hidden', alignSelf: 'center'}}>
+                        <Image 
+                            source={require('../../assets/Twitter-logo.png')} 
+                            style={{flex: 1, height: null, width: null}} 
+                        />
+                    </View>
+                    <Input
+                        placeholder="Email"
+                        keyboardType="email-address"
+                        value={this.state.email}
+                        onChangeText={(email) => this.setState({email})}
+                    />
+                    <Input
+                        placeholder="Password"
+                        value={this.state.password}
+                        onChangeText={(password) => this.setState({password})}
+                        secureTextEntry
+                    />
+                    {this.renderLoginButton(this.props.loading)}
+                    {/* <TouchableOpacity style={styles.button} onPress={this.setState({modalVisible: false})}>
                         <Text style={styles.buttonText}>Sign Up</Text>
-                    </TouchableOpacity> 
+                    </TouchableOpacity> */}
                 </View>
-                <Modal 
+                {/* <Modal 
                     visible={this.state.modalVisible}
                     animationType={'fade'}
                     onRequestClose={() => this.setState({modalVisible: false})}
@@ -53,32 +111,58 @@ export default class Welcome extends Component {
                         alignContent: 'center',
                         height: 500
                     }}>
-                        <Login userAction="Sign Up" buttonPress={() => this.props.navigation.navigate('Home')} />
                     
+                        <Input
+                            placeholder="Email"
+                            keyboardType="email-address"
+                            value={this.state.email}
+                            onChangeText={(email) => this.setState({email})}
+                        />
+                        <Input
+                            placeholder="Password"
+                            value={this.state.password}
+                            onChangeText={(password) => this.setState({password})}
+                        />
+                        <TouchableOpacity style={styles.button} >
+                            <Text style={styles.buttonText}>Sign Up</Text>
+                        </TouchableOpacity>
                         <Button
                             onPress={()=>this.setState({modalVisible: false})}
                             title="Close Modal"
                         />
                     </View>
-                </Modal>
+                </Modal> */}
             </View>
         );
     }
 }
 
+mapStateToProp = ({auth}) => {
+    return {
+        user: auth.user,
+        error: auth.error,
+        loading: auth.loading,
+    }
+}
+
+export default connect(mapStateToProp, { loginUser })(Welcome);
+
 const styles = StyleSheet.create({
+
     container : {
         backgroundColor:'#4fc3f7',
         flex: 1,
         alignItems:'center',
         justifyContent :'center'
     },
-    signupStyle: {
-        flexGrow: 1,
-        alignItems:'flex-start',
-        justifyContent :'center',
-        paddingVertical:20,
-        flexDirection:'row'
+    inputBox: {
+        width:300,
+        backgroundColor:'#9575cd',
+        borderRadius: 20,
+        paddingHorizontal:16,
+        fontSize:16,
+        color:'#ffffff',
+        marginVertical: 10
     },
     button: {
         width:300,
@@ -87,10 +171,17 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         paddingVertical: 13
     },
-    buttonText: {
+    facebookButton: {
+          width:300,
+          backgroundColor:'#4267b2',
+          borderRadius: 20,
+          marginVertical: 10,
+          paddingVertical: 13
+      },
+      buttonText: {
         fontSize:16,
         fontWeight:'500',
         color:'#ffffff',
         textAlign:'center'
-    },
+      }
 });

@@ -18,7 +18,7 @@ import Notifications from '../../screens/Notifications';
 import Message from '../../screens/Message';
 
 
-//DrawerNav 
+
 
 
 
@@ -70,12 +70,32 @@ const tabNavigatorConfig = {
 }
 export const TabNav = TabNavigator(routeConfigs, tabNavigatorConfig);
 export const StackNav = StackNavigator({TabNav: { screen: TabNav }});
+
+//Drawer Stack
+// const DrawerStackNavRouteConfigs = {
+//     Welcome: { screen: Welcome},
+//     Lists: { screen: Lists},
+//     Moments: { screen: Moments },
+//     Profile: { screen: Profile },
+// };
+
+// const DrawerStackNavTabNavigatorConfig = {
+//     initialRouteName: 'Welcome'
+// };
+// export const DrawerStackNav = StackNavigator(DrawerStackNavRouteConfigs, DrawerStackNavTabNavigatorConfig);
+
+//DrawerNav 
 export const DrawerNav = DrawerNavigator (
     {
         Welcome: { screen: Welcome},
         Lists: { screen: Lists},
         Moments: { screen: Moments },
-        Profile: { screen: Profile },
+        Profile: { 
+            screen: Profile,
+            navigationOptions: ({navigation}) => ({
+                header: <View><Text>Profile Page</Text></View>
+            })
+        },
         StackNav: { screen: StackNav}, // Stack Navigator to get Header on each Tabs
     },
     {
@@ -84,4 +104,3 @@ export const DrawerNav = DrawerNavigator (
         contentComponent: drawerContentComponents,
     }
 );
-

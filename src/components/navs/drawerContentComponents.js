@@ -5,21 +5,23 @@ import drawerScreenText from '../drawerScreenText';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 class drawerContentComponents extends Component{
-    navigateToScreen = ( route ) => () => {
-        const navigateAction = NavigationActions.navigate({
-            routeName: route
-        });
-        this.props.navigation.dispatch(navigateAction);
-    }
+    navigateToScreen = ( route ) =>(
+            () => {
+            const navigateAction = NavigationActions.navigate({
+                routeName: route
+            });
+            this.props.navigation.dispatch(navigateAction);
+        })
     render(){
         return(
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.header}>
-                        <ImageBackground source={require('../../../assets/drawer-cover.png')} style={{flex: 1, width: 280}} >
-                            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                                <Text>Some Text</Text>
-                            </View>
+                        <ImageBackground source={require('../../../assets/drawer-cover.png')} style={{flex: 1, width: 280, justifyContent: 'center'}} >
+                            <Image
+                                source={require('../../../assets/avatar.png')}
+                                style={styles.profileImageStyle}
+                            />
                         </ImageBackground>
                     </View>
                     <View style={{flexDirection: 'row'}}>
@@ -85,6 +87,13 @@ const styles= StyleSheet.create({
     iconStyle: {
         height: 20,
         width: 20
+    },
+    profileImageStyle: {
+        width: 40, 
+        height: 40, 
+        borderRadius: 40/2, 
+        marginLeft: 15,
+        alignSelf: 'flex-start'
     }
 });
 

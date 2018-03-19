@@ -5,7 +5,7 @@ import Header from '../components/Header';
 class Search extends Component {
     static navigationOptions =  ({navigation}) =>({
         title: 'Search',
-        header: <Header headerTitle={navigation.state.routeName}/>,
+        header: <Header headerTitle={navigation.state.routeName} profilePress={() => navigation.navigate('DrawerOpen')}/>,
     });
 
     render(){
