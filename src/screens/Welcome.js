@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, Modal, BackHandler, A
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import {
-    loginUser
+    loginUser,
+    clearError
 } from '../actions';
 import Input from '../components/Input';
 import Spinner from '../components/Spinner';
@@ -53,6 +54,7 @@ class Welcome extends Component {
     }
 
     renderLoginButton(loading){
+        console.log(this.props.error)
         if(loading){
             return <Spinner />;
         }else{
@@ -61,6 +63,7 @@ class Welcome extends Component {
                     <TouchableOpacity style={styles.button} onPress={this.loginButtonPress.bind(this)} >
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
+                    {(this.props.error!=='')?this.renderErrorMsg():null}
                     <Text style={{lineHeight: 50}}>OR</Text>
                     <TouchableOpacity style={styles.button} onPress={this.loginButtonPress.bind(this)} >
                         <Text style={styles.buttonText}>Sign Up</Text>
@@ -70,8 +73,16 @@ class Welcome extends Component {
         }
     }
 
+    renderErrorMsg(){
+        return(
+            <View>
+                <Text>{this.props.error}</Text>
+            </View>
+        )
+    }
+
     render() {
-        console.log(this.props.user);
+        //console.log(this.props.user);
         return (
             <View style={styles.container}>
                 {(this.props.user)?this.renderHome():null}
@@ -86,15 +97,16 @@ class Welcome extends Component {
                         placeholder="Email"
                         keyboardType="email-address"
                         value={this.state.email}
-                        onChangeText={(email) => this.setState({email})}
+                        onChangeText={(email) => {this.props.clearError();this.setState({email})}}
                     />
                     <Input
                         placeholder="Password"
                         value={this.state.password}
-                        onChangeText={(password) => this.setState({password})}
+                        onChangeText={(password) => {this.props.clearError();this.setState({password})}}
                         secureTextEntry
                     />
                     {this.renderLoginButton(this.props.loading)}
+                    
                     {/* <TouchableOpacity style={styles.button} onPress={this.setState({modalVisible: false})}>
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity> */}
@@ -145,7 +157,7 @@ mapStateToProp = ({auth}) => {
     }
 }
 
-export default connect(mapStateToProp, { loginUser })(Welcome);
+export default connect(mapStateToProp, { loginUser, clearError })(Welcome);
 
 const styles = StyleSheet.create({
 
