@@ -1,4 +1,11 @@
-import { LOGIN_USER_SUCCESS, LOGIN_USER_FAIL, LOGIN_USER, LOGOUT, CLEAR_ERROR } from './types';
+import { 
+    LOGIN_USER_SUCCESS, 
+    LOGIN_USER_FAIL, 
+    LOGIN_USER, 
+    LOGOUT, 
+    CLEAR_ERROR,
+    SIGNUP_USER
+} from './types';
 import { AsyncStorage } from 'react-native';
 import firebase from 'firebase';
 
@@ -37,6 +44,30 @@ const loginUserFail = (dispatch, error) => {
         type: LOGIN_USER_FAIL,
         payload: error
     });
+}
+
+export const signupUser = (email, password) => {
+    return (dispatch) => {
+        dispatch({ type: SIGNUP_USER });
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(user => {
+                loginUserSuccess(dispatch, user);
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                errorMessage = '';
+                if(errorCode==='auth/email-already-in-use'){
+                    errorMessage = 'email already used, try login';
+                }else if(errorCode==='auth/invalid-email'){
+                    errorMessage = 'Email not valid, check again';
+                }else if(errorCode==='auth/weak-password'){
+                    errorMessage = 'Password is weak'
+                }else{
+                    errorMessage = 'Something went wrong';
+                }
+                loginUserFail(dispatch, errorMessage)
+            });
+    }
 }
 
 export const logout = (dispatch) => {

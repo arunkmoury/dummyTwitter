@@ -1,4 +1,4 @@
-import { LOGIN_USER_SUCCESS, LOGIN_USER_FAIL, LOGIN_USER, LOGOUT, CLEAR_ERROR } from '../actions/types';
+import { LOGIN_USER_SUCCESS, LOGIN_USER_FAIL, LOGIN_USER, LOGOUT, CLEAR_ERROR, SIGNUP_USER } from '../actions/types';
 
 const INITIAL_STATE = {
     user: '',
@@ -14,6 +14,8 @@ export default (state=INITIAL_STATE, action) => {
             return {...state, user: action.payload, loading: false, error: ''};
         case LOGIN_USER_FAIL:
             return {...state, error: action.payload, loading: false,};
+        case SIGNUP_USER:
+            return {...state, loading: true,}
         case LOGOUT:
             return {...state, ...INITIAL_STATE};
         case CLEAR_ERROR:

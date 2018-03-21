@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import firebase from 'firebase';
 import {
     loginUser,
-    clearError
+    clearError,
+    signupUser
 } from '../actions';
 import Input from '../components/Input';
 import Spinner from '../components/Spinner';
@@ -54,7 +55,6 @@ class Welcome extends Component {
     }
 
     renderLoginButton(loading){
-        console.log(this.props.error)
         if(loading){
             return <Spinner />;
         }else{
@@ -65,9 +65,24 @@ class Welcome extends Component {
                     </TouchableOpacity>
                     {(this.props.error!=='')?this.renderErrorMsg():null}
                     <Text style={{lineHeight: 50}}>OR</Text>
-                    <TouchableOpacity style={styles.button} onPress={this.loginButtonPress.bind(this)} >
+                    <TouchableOpacity style={styles.button} onPress={() => this.setState({modalVisible: true})} >
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
+                </View>
+            );
+        }
+    }
+
+    renderSignupButton(loading){
+        if(loading){
+            return <Spinner />;
+        }else{
+            return (
+                <View style={{alignItems: 'center'}}>
+                    <TouchableOpacity style={styles.button} onPress={()=>this.props.signupUser(this.state.email, this.state.password)} >
+                        <Text style={styles.buttonText}>Sign Up</Text>
+                    </TouchableOpacity>
+                    {(this.props.error!=='')?this.renderErrorMsg():null}
                 </View>
             );
         }
@@ -79,6 +94,14 @@ class Welcome extends Component {
                 <Text>{this.props.error}</Text>
             </View>
         )
+    }
+
+    _closeModal(){
+        this.setState({
+            email: '',
+            password: '',
+            modalVisible: false
+        })
     }
 
     render() {
@@ -111,16 +134,17 @@ class Welcome extends Component {
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity> */}
                 </View>
-                {/* <Modal 
+                <Modal 
                     visible={this.state.modalVisible}
                     animationType={'fade'}
-                    onRequestClose={() => this.setState({modalVisible: false})}
+                    onRequestClose={this._closeModal.bind(this)}
                     position='center'
                 >
                     <View style={{
                         justifyContent: 'center',
                         alignItems: 'center',
                         alignContent: 'center',
+                        alignSelf: 'center',
                         height: 500
                     }}>
                     
@@ -128,22 +152,27 @@ class Welcome extends Component {
                             placeholder="Email"
                             keyboardType="email-address"
                             value={this.state.email}
-                            onChangeText={(email) => this.setState({email})}
+                            onChangeText={(email) => {this.props.clearError();this.setState({email})}}
                         />
                         <Input
                             placeholder="Password"
                             value={this.state.password}
-                            onChangeText={(password) => this.setState({password})}
+                            onChangeText={(password) => {this.props.clearError();this.setState({password})}}
+                            secureTextEntry
                         />
-                        <TouchableOpacity style={styles.button} >
-                            <Text style={styles.buttonText}>Sign Up</Text>
-                        </TouchableOpacity>
+                        {this.renderSignupButton(this.props.loading)}
                         <Button
-                            onPress={()=>this.setState({modalVisible: false})}
+                            onPress={()=>{
+                                this.props.clearError();
+                                this.setState({
+                                email: '',
+                                password: '',
+                                modalVisible: false
+                            })}}
                             title="Close Modal"
                         />
                     </View>
-                </Modal> */}
+                </Modal>
             </View>
         );
     }
@@ -157,7 +186,7 @@ mapStateToProp = ({auth}) => {
     }
 }
 
-export default connect(mapStateToProp, { loginUser, clearError })(Welcome);
+export default connect(mapStateToProp, { loginUser, clearError, signupUser })(Welcome);
 
 const styles = StyleSheet.create({
 
