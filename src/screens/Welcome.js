@@ -5,18 +5,18 @@ import firebase from 'firebase';
 import {
     loginUser,
     clearError,
-    signupUser
+    signupUser,
+    clear
 } from '../actions';
 import Input from '../components/Input';
 import Spinner from '../components/Spinner';
+import Form from '../components/form';
 
 class Welcome extends Component {
     constructor(props){
         super(props);
         this.state = {
             modalVisible: false,
-            email: '',
-            password: '',
         }
         this.renderHome = this.renderHome.bind(this);
     }
@@ -47,7 +47,7 @@ class Welcome extends Component {
     })
 
     loginButtonPress() {
-        this.props.loginUser(this.state.email, this.state.password);
+        this.props.loginUser(this.props.email, this.props.password);
     }
 
     renderHome(){
@@ -65,7 +65,7 @@ class Welcome extends Component {
                     </TouchableOpacity>
                     {(this.props.error!=='')?this.renderErrorMsg():null}
                     <Text style={{lineHeight: 50}}>OR</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => this.setState({modalVisible: true})} >
+                    <TouchableOpacity style={styles.button} onPress={() => {this.props.clear();this.props.clearError();this.setState({modalVisible: true})}} >
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
@@ -79,7 +79,7 @@ class Welcome extends Component {
         }else{
             return (
                 <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity style={styles.button} onPress={()=>this.props.signupUser(this.state.email, this.state.password)} >
+                    <TouchableOpacity style={styles.button} onPress={()=>this.props.signupUser(this.props.email, this.props.password)} >
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                     {(this.props.error!=='')?this.renderErrorMsg():null}
@@ -97,15 +97,13 @@ class Welcome extends Component {
     }
 
     _closeModal(){
+        this.props.clear();
         this.setState({
-            email: '',
-            password: '',
             modalVisible: false
         })
     }
 
     render() {
-        //console.log(this.props.user);
         return (
             <View style={styles.container}>
                 {(this.props.user)?this.renderHome():null}
@@ -116,23 +114,8 @@ class Welcome extends Component {
                             style={{flex: 1, height: null, width: null}} 
                         />
                     </View>
-                    <Input
-                        placeholder="Email"
-                        keyboardType="email-address"
-                        value={this.state.email}
-                        onChangeText={(email) => {this.props.clearError();this.setState({email})}}
-                    />
-                    <Input
-                        placeholder="Password"
-                        value={this.state.password}
-                        onChangeText={(password) => {this.props.clearError();this.setState({password})}}
-                        secureTextEntry
-                    />
+                    <Form />
                     {this.renderLoginButton(this.props.loading)}
-                    
-                    {/* <TouchableOpacity style={styles.button} onPress={this.setState({modalVisible: false})}>
-                        <Text style={styles.buttonText}>Sign Up</Text>
-                    </TouchableOpacity> */}
                 </View>
                 <Modal 
                     visible={this.state.modalVisible}
@@ -147,26 +130,13 @@ class Welcome extends Component {
                         alignSelf: 'center',
                         height: 500
                     }}>
-                    
-                        <Input
-                            placeholder="Email"
-                            keyboardType="email-address"
-                            value={this.state.email}
-                            onChangeText={(email) => {this.props.clearError();this.setState({email})}}
-                        />
-                        <Input
-                            placeholder="Password"
-                            value={this.state.password}
-                            onChangeText={(password) => {this.props.clearError();this.setState({password})}}
-                            secureTextEntry
-                        />
+                        <Form />
                         {this.renderSignupButton(this.props.loading)}
                         <Button
                             onPress={()=>{
                                 this.props.clearError();
+                                this.props.clear();
                                 this.setState({
-                                email: '',
-                                password: '',
                                 modalVisible: false
                             })}}
                             title="Close Modal"
@@ -180,13 +150,15 @@ class Welcome extends Component {
 
 mapStateToProp = ({auth}) => {
     return {
+        email: auth.email,
+        password: auth.password,
         user: auth.user,
         error: auth.error,
         loading: auth.loading,
     }
 }
 
-export default connect(mapStateToProp, { loginUser, clearError, signupUser })(Welcome);
+export default connect(mapStateToProp, { loginUser, clearError, signupUser, clear })(Welcome);
 
 const styles = StyleSheet.create({
 

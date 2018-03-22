@@ -1,13 +1,36 @@
 import { 
+    EMAIL_CHANGED,
+    PASSWORD_CHANGED,
     LOGIN_USER_SUCCESS, 
     LOGIN_USER_FAIL, 
     LOGIN_USER, 
     LOGOUT, 
     CLEAR_ERROR,
+    CLEAR,
     SIGNUP_USER
 } from './types';
 import { AsyncStorage } from 'react-native';
 import firebase from 'firebase';
+
+export const emailChanged = (text) => {
+    return {
+        type: EMAIL_CHANGED,
+        payload: text
+    };
+};
+
+export const passwordChanged = (text) => {
+    return {
+        type: PASSWORD_CHANGED,
+        payload: text
+    };
+};
+
+export const clear = () => {
+    return {
+        type: CLEAR,
+    }
+}
 
 export const loginUser = (email, password) => {
     return (dispatch) => {

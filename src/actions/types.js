@@ -4,3 +4,6 @@ export const LOGIN_USER = 'login_user';
 export const LOGOUT = 'logout';
 export const CLEAR_ERROR = 'clear_error';
 export const SIGNUP_USER = 'signup_user';
+export const PASSWORD_CHANGED = 'password_changed';
+export const EMAIL_CHANGED = 'email_changed';
+export const CLEAR = 'clear';

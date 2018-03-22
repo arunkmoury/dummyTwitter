@@ -15,5 +15,5 @@ const AppComponent = () => {
 
     );
 }
-
+//console.disableYellowBox = true;
 AppRegistry.registerComponent('DummyTwitter', () => AppComponent);
