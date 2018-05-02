@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Image, Animated } from 'react-native';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import { connect } from 'react-redux';
+import { getProfile, emailChanged, nameChanged } from '../actions';
+import Input from '../components/Input';
 
 HEADER_MAX_HEIGHT = 130
 HEADER_MIN_HEIGHT = 50
 PROFILE_IMAGE_MAX_HEIGHT = 80
 PROFILE_IMAGE_MIN_HEIGHT = 40
 
-export default class Profile extends Component {
+class Profile extends Component {
 
     constructor(props){
         super(props);
@@ -17,8 +19,11 @@ export default class Profile extends Component {
         }
     }
 
-    render(){
+    componentWillMount() {
+        this.props.getProfile();
+    }
 
+    render(){
         const headerHeight = this.state.scrollY.interpolate({
             inputRange: [0, HEADER_MAX_HEIGHT-HEADER_MIN_HEIGHT],
             outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
@@ -51,7 +56,6 @@ export default class Profile extends Component {
             outputRange: [-20, -20, -20, 0],
             extrapolate: 'clamp'
         })
-
         return (
             <View style={{flex: 1}}>
                 <Animated.View style={{
@@ -65,7 +69,7 @@ export default class Profile extends Component {
                     alignItems: 'center'
                 }} >
                     <Animated.View style={{position: 'absolute', bottom: headerTitleBottom}}>
-                        <Text style={{color: 'white', fontSize: 14, fontWeight: 'bold'}}>Username</Text>
+                        <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>{this.props.name}</Text>
                     </Animated.View>
                 </Animated.View>
                 <ScrollView style={{ flex:1 }}
@@ -89,14 +93,35 @@ export default class Profile extends Component {
                             style={{flex: 1, width: null, height: null}}
                         />
                     </Animated.View>
-                    <View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 26, paddingLeft: 10}}>Username</Text>
+                    <View style={{marginLeft: 10,}}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 26, paddingLeft: 10}}>{this.props.name}</Text>
+                        <Text>{this.props.email}</Text>
                     </View>
-                    <View style={{height: 1000}}></View>
+                    <View style={{height: 1000, alignItems: 'center', justifyContent: 'flex-start'}}>
+                        <Input
+                            placeholder="Name"
+                            value={this.props.name}
+                            onChangeText={(text) => this.props.nameChanged(text)}
+                        />
+                        <Input
+                            placeholder="Email"
+                            value={this.props.email}
+                            onChangeText={(text) => this.props.emailChanged(text)}
+                        />
+                    </View>
                     
                 </ScrollView>
-                
             </View>
         );
     }
 }
+
+mapStateToProps = ({profile, auth}) => {
+    return {
+        name: profile.name,
+        email: profile.email,
+        loading: profile.loading
+    }
+}
+
+export default connect(mapStateToProps, { getProfile, emailChanged, nameChanged })(Profile);

@@ -23,9 +23,9 @@ export class Home extends Component {
 
     componentWillMount() {
         this.props.navigation.setParams({
+            name: this.props.user.displayName,
             logout: this.props.logout,
         })
-        //console.log(this.props)
     }
 
     handleBackButton = () => {
@@ -41,37 +41,29 @@ export class Home extends Component {
         return true;
     }
 
+    logout(params){
+        params.logout();
+        NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName: 'Welcome' }),
+            ]
+        })
+    }
+
     static navigationOptions = ({navigation}) => {
         const params = navigation.state.params || {};
         return {
             title: 'Home',
             header: <Header 
                     headerTitle={navigation.state.routeName} 
-                    onButtonPress={() => {
-                        NavigationActions.reset({
-                            index: 0,
-                            actions: [
-                                NavigationActions.navigate({ routeName: 'Welcome' })
-                            ]
-                          })
-                        navigation.navigate('Welcome') 
-                    }}
+                    name={params.name}
+                    onButtonPress={() =>{ new Home().logout(params);navigation.navigate('Welcome') } // calling non static method from static method
+                    }
                     profilePress={() => navigation.navigate('DrawerOpen')}
                 />,
         }
     };
-
-
-    alertButton(){
-        return(
-        Alert.alert(
-            'Alert Title',
-            "Alert message",
-            [
-              { text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
-          ));
-    }
 
     checkLoginUser (){
         // try{
@@ -83,27 +75,28 @@ export class Home extends Component {
     }
 
     render(){
+        console.log(this.props.user)
         return (
+            
             <View 
                 style={{height: 1000}}
             >
-
+                {/* {(this.props.user!=='')?this.props.navigation.navigate('Welcome'):null} */}
                 <View style={{height: 1000}}>
                     <Text>Home</Text>       
-                    <Button title="Logout" onPress={() => this.props.navigation.navigate('Welcome')} />
+                    <Button title="Logout" onPress={() => {
+                        NavigationActions.reset({
+                            index: 0,
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'Welcome' })
+                            ]
+                          });
+                        this.props.navigation.navigate('Welcome')}} />
                 </View>
             </View>
         );
     }
 }
-
-// const mapDispatch = (dispatch) => ({
-//     logout: () => {this.props.logout(),
-//         NavigationActions.reset({
-//         index: 0,
-//         actions: [NavigationActions.navigate({ routeName: "Welcome" })]
-//    })}
-//   })
 
 // const  LogoutButton = ({logout}) => {
 //     return (

@@ -7,3 +7,7 @@ export const SIGNUP_USER = 'signup_user';
 export const PASSWORD_CHANGED = 'password_changed';
 export const EMAIL_CHANGED = 'email_changed';
 export const CLEAR = 'clear';
+export const NAME_CHANGED = 'name_changed';
+export const GET_PROFILE = 'get_profile';
+export const GET_NAME = 'get_name';
+export const GET_EMAIL = 'get_email';

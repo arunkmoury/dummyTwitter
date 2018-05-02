@@ -65,7 +65,11 @@ class Welcome extends Component {
                     </TouchableOpacity>
                     {(this.props.error!=='')?this.renderErrorMsg():null}
                     <Text style={{lineHeight: 50}}>OR</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => {this.props.clear();this.props.clearError();this.setState({modalVisible: true})}} >
+                    <TouchableOpacity style={styles.button} onPress={() => {
+                        this.props.clear();
+                        this.props.clearError();
+                        this.setState({modalVisible: true})
+                    }} >
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
@@ -79,7 +83,7 @@ class Welcome extends Component {
         }else{
             return (
                 <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity style={styles.button} onPress={()=>this.props.signupUser(this.props.email, this.props.password)} >
+                    <TouchableOpacity style={styles.button} onPress={()=>this.props.signupUser(this.props.name, this.props.email, this.props.password)} >
                         <Text style={styles.buttonText}>Sign Up</Text>
                     </TouchableOpacity>
                     {(this.props.error!=='')?this.renderErrorMsg():null}
@@ -114,7 +118,7 @@ class Welcome extends Component {
                             style={{flex: 1, height: null, width: null}} 
                         />
                     </View>
-                    <Form />
+                    <Form signup={false} />
                     {this.renderLoginButton(this.props.loading)}
                 </View>
                 <Modal 
@@ -130,7 +134,7 @@ class Welcome extends Component {
                         alignSelf: 'center',
                         height: 500
                     }}>
-                        <Form />
+                        <Form signup={true} />
                         {this.renderSignupButton(this.props.loading)}
                         <Button
                             onPress={()=>{
@@ -155,6 +159,7 @@ mapStateToProp = ({auth}) => {
         user: auth.user,
         error: auth.error,
         loading: auth.loading,
+        name: auth.name,
     }
 }
 

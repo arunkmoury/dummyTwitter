@@ -9,7 +9,6 @@ import {
 class Header extends Component {
 
     logoutPressed() {
-        console.log("BUtton pressed")
         this.props.onButtonPress();
     }
     
@@ -21,17 +20,20 @@ class Header extends Component {
         //console.log(this.props.user);
         return (
             <Animated.View style={styles.container}>
-                <TouchableWithoutFeedback onPress={this.props.profilePress} >
-                <Image
-                    source={require('../../assets/avatar.png')}
-                    style={{ width: 40, height: 40, borderRadius: 40/2, marginLeft: 15}}
-                />
-                </TouchableWithoutFeedback>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <TouchableWithoutFeedback onPress={this.props.profilePress} >
+                        <Image
+                            source={require('../../assets/avatar.png')}
+                            style={{ width: 40, height: 40, borderRadius: 40/2, marginLeft: 15}}
+                        />
+                    </TouchableWithoutFeedback>
+                    <Text>{this.props.name}</Text>
+                </View>
                 <View style={{alignItems: 'center'}}>
                     {(this.props.headerTitle==='Search')?
                         <SearchInput />: <Text>{this.props.headerTitle}</Text>}
                 </View>
-                <View><Button title="Button" onPress={this.logoutPressed.bind(this)} /></View>
+                <Button style={{justifyContent: 'flex-end'}} title="Logout" onPress={this.logoutPressed.bind(this)} />
             </Animated.View>
         )
     }

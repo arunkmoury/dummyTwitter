@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged } from '../actions';
+import { emailChanged, passwordChanged, nameChanged } from '../actions';
 import Input from './Input';
 
 class Form extends Component {
@@ -9,6 +9,15 @@ class Form extends Component {
     render(){
         return(
             <View>
+                {
+                    (this.props.signup)?
+                        <Input
+                            placeholder="Name"
+                            value={this.props.name}
+                            onChangeText={(text) => this.props.nameChanged(text)}
+                        />
+                    :null
+                }
                 <Input
                     placeholder="Email"
                     keyboardType="email-address"
@@ -35,4 +44,4 @@ const mapStateToProps = ({ auth }) => {
     }
 } 
 
-export default connect(mapStateToProps, { emailChanged, passwordChanged })(Form);
+export default connect(mapStateToProps, { emailChanged, passwordChanged, nameChanged })(Form);

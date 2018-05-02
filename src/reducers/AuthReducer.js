@@ -7,7 +7,8 @@ import {
     SIGNUP_USER, 
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
-    CLEAR
+    CLEAR,
+    NAME_CHANGED
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -16,6 +17,7 @@ const INITIAL_STATE = {
     user: '',
     error: '',
     loading: false,
+    name: ''
 }
 
 export default (state=INITIAL_STATE, action) => {
@@ -26,6 +28,8 @@ export default (state=INITIAL_STATE, action) => {
             return { ...state, email: action.payload, error: '' };
         case PASSWORD_CHANGED:
             return {...state, password: action.payload, error: '' };
+        case NAME_CHANGED:
+            return {...state, name: action.payload, error: ''};
         case LOGIN_USER:
             return {...state, loading: true,}
         case LOGIN_USER_SUCCESS:
