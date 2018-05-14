@@ -5,7 +5,7 @@ const Compose = () => {
     return (
         <View>
             <Text>Compose</Text>
-        </View>
+        </View> 
     );
 }
 
